@@ -1,5 +1,10 @@
-const CACHE = "geeta-daily-v1";
-const FILES = ["/", "/index.html", "/manifest.json", "/icon.svg"];
+const CACHE = "geeta-daily-v3";
+const FILES = [
+  "/App/",
+  "/App/index.html",
+  "/App/manifest.json",
+  "/App/icon.svg"
+];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
