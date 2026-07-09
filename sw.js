@@ -1,9 +1,10 @@
-const CACHE = "geeta-daily-v3";
+const CACHE = "geeta-daily-v4";
 const FILES = [
   "/App/",
   "/App/index.html",
   "/App/manifest.json",
-  "/App/icon.svg"
+  "/App/icon-192.png",
+  "/App/icon-512.png"
 ];
 
 self.addEventListener("install", e => {
