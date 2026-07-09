@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f0c29" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Aaj Ka Shlok" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <title>Aaj Ka Shlok</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #0f0c29 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px 40px;
+      font-family: Georgia, serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(255,200,100,0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,150,50,0.04) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .om {
+      font-size: 2rem;
+      color: rgba(255,200,100,0.35);
+      margin-bottom: 6px;
+      letter-spacing: 4px;
+    }
+
+    .title-label {
+      color: rgba(255,200,100,0.6);
+      font-size: 0.65rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-family: sans-serif;
+      margin-bottom: 4px;
+    }
+
+    .date-str {
+      color: rgba(255,255,255,0.3);
+      font-size: 0.72rem;
+      font-family: sans-serif;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      max-width: 440px;
+      width: 100%;
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chapter-badge {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .chapter-badge span {
+      background: rgba(255,200,100,0.1);
+      border: 1px solid rgba(255,200,100,0.2);
+      border-radius: 20px;
+      padding: 5px 18px;
+      color: rgba(255,200,100,0.8);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      font-family: sans-serif;
+    }
+
+    .shlok {
+      text-align: center;
+      color: rgba(255,230,150,0.95);
+      font-size: 1.2rem;
+      line-height: 2;
+      margin-bottom: 28px;
+      padding: 0 4px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,200,100,0.15);
+    }
+
+    .divider-dot {
+      color: rgba(255,200,100,0.3);
+      font-size: 0.6rem;
+    }
+
+    .box {
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .box-plain {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .box-gold {
+      background: rgba(255,200,100,0.06);
+      border: 1px solid rgba(255,200,100,0.15);
+    }
+
+    .box-label {
+      color: rgba(255,200,100,0.5);
+      font-size: 0.58rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: sans-serif;
+      margin-bottom: 10px;
+    }
+
+    .box-text {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.92rem;
+      line-height: 1.85;
+      font-family: sans-serif;
+    }
+
+    .box-gold .box-text {
+      color: rgba(255,220,120,0.92);
+    }
+
+    .footer {
+      margin-top: 44px;
+      color: rgba(255,255,255,0.15);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    .install-btn {
+      display: none;
+      margin-top: 28px;
+      background: rgba(255,200,100,0.1);
+      border: 1px solid rgba(255,200,100,0.25);
+      border-radius: 24px;
+      padding: 10px 24px;
+      color: rgba(255,200,100,0.8);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      font-family: sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .install-btn:hover {
+      background: rgba(255,200,100,0.18);
+    }
+
+    .install-btn.visible { display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="om">ॐ</div>
+  <div class="title-label">Aaj Ka Shlok</div>
+  <div class="date-str" id="dateStr"></div>
+
+  <div class="card">
+    <div class="chapter-badge"><span id="chapterBadge"></span></div>
+    <div class="shlok" id="shlok"></div>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-dot">❋</div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="box box-plain">
+      <div class="box-label">Arth</div>
+      <div class="box-text" id="meaning"></div>
+    </div>
+    <div class="box box-gold">
+      <div class="box-label">Aaj Ke Liye</div>
+      <div class="box-text" id="aaj"></div>
+    </div>
+  </div>
+
+  <button class="install-btn" id="installBtn">⬇ Home Screen Par Add Karo</button>
+
+  <div class="footer">YATHARTH GEETA · SWAMI ADGADANAND JI</div>
+
+  <script>
+    const quotes = [
+      {
+        chapter: "2.47",
+        shlok: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।",
+        meaning: "Tera adhikar sirf karm karne mein hai, phal mein kabhi nahi. Phal ki chinta chhod.",
+        aaj: "Aaj jo bhi karo — result ki soch chhodo. Sirf kaam par dhyan do."
+      },
+      {
+        chapter: "6.5",
+        shlok: "उद्धरेदात्मनात्मानं नात्मानमवसादयेत्।",
+        meaning: "Apna uddhar khud karo. Apne aap ko neeche mat girne do. Tu hi apna dost hai, tu hi apna dushman.",
+        aaj: "Aaj ek baar apne aap se poochho — main apna dost ban raha hoon ya dushman?"
+      },
+      {
+        chapter: "6.35",
+        shlok: "असंशयं महाबाहो मनो दुर्निग्रहं चलम्।",
+        meaning: "Mann chanchal aur mushkil se rokne wala hai — par abhyaas aur vairaagya se kabu mein aata hai.",
+        aaj: "Mann bhaage toh bhaagne do — bas baithe raho. Yahi abhyaas hai."
+      },
+      {
+        chapter: "6.17",
+        shlok: "युक्ताहारविहारस्य युक्तचेष्टस्य कर्मसु।",
+        meaning: "Jo khane, sone, jaagne aur kaam karne mein santulan rakhta hai — uska dukh door ho jaata hai.",
+        aaj: "Aaj ek cheez mein moderation rakho — khana, neend, ya screen time."
+      },
+      {
+        chapter: "2.14",
+        shlok: "मात्रास्पर्शास्तु कौन्तेय शीतोष्णसुखदुःखदाः।",
+        meaning: "Sukh aur dukh toh indriyoin ke anubhav hain — aate jaate rehte hain. Inhe sahna seekho.",
+        aaj: "Jo bhi feel ho raha hai aaj — achha ya bura — yaad rakho, yeh bhi guzar jaayega."
+      },
+      {
+        chapter: "6.20",
+        shlok: "यत्रोपरमते चित्तं निरुद्धं योगसेवया।",
+        meaning: "Jahan mann sadhna se ruk jaata hai aur Atma mein hi sukh milta hai — wahi asli dhyan hai.",
+        aaj: "Aaj 10 minute baitho — kuch hasil nahi karna, bas theharna hai."
+      },
+      {
+        chapter: "3.16",
+        shlok: "एवं प्रवर्तितं चक्रं नानुवर्तयतीह यः।",
+        meaning: "Jo is chakra ke saath nahi chalta — woh vyarth jee raha hai. Sadhna hi asli karm hai.",
+        aaj: "Aaj ki sadhna miss mat karo — chahe 5 minute hi sahi."
+      },
+      {
+        chapter: "5.29",
+        shlok: "भोक्तारं यज्ञतपसां सर्वलोकमहेश्वरम्।",
+        meaning: "Parmatma hi sabhi yagya aur tapasya ka bhokta hai — use jaanke sadhak ko shanti milti hai.",
+        aaj: "Jo bhi aradhana karo aaj — use Usi ko arpan karo. Phal ki zimmedari Uski."
+      },
+      {
+        chapter: "6.26",
+        shlok: "यतो यतो निश्चरति मनश्चञ्चलमस्थिरम्।",
+        meaning: "Mann jahan jahan bhaage — wahan wahan se wapas laao, dheere dheere Parmatma mein lagao.",
+        aaj: "Mann bhaaga? Theek hai. Wapas laao. Baar baar. Yahi practice hai."
+      },
+      {
+        chapter: "4.38",
+        shlok: "न हि ज्ञानेन सदृशं पवित्रमिह विद्यते।",
+        meaning: "Is duniya mein gyaan se pavitra aur kuch nahi. Sadhna se woh gyaan milta hai.",
+        aaj: "Aaj jo seekha — ek cheez andar utaaro. Padhna alag hai, jeena alag."
+      },
+      {
+        chapter: "2.48",
+        shlok: "योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय।",
+        meaning: "Yog mein sthit hokar karm karo — safalta aur asafalta dono mein sama raho.",
+        aaj: "Aaj ka kaam karo — result jo bhi ho, mann ek jaisa rakho."
+      },
+      {
+        chapter: "6.43",
+        shlok: "तत्र तं बुद्धिसंयोगं लभते पौर्वदेहिकम्।",
+        meaning: "Pichle janam ki sadhna ka sanskaar is janam mein bhi kaam aata hai — koi koshish bekar nahi jaati.",
+        aaj: "Aaj ki 10 minute bhi bekar nahi hain — sab jama ho raha hai andar."
+      },
+      {
+        chapter: "5.27",
+        shlok: "स्पर्शान्कृत्वा बहिर्बाह्यांश्चक्षुश्चैवान्तरे भ्रुवोः।",
+        meaning: "Baahri vishyon ko bahar rakho, drishti ko andar laao — yeh dhyan ki taiyari hai.",
+        aaj: "Baithne se pehle phone rakho, aankhen band karo. Sirf itna."
+      },
+      {
+        chapter: "3.42",
+        shlok: "इन्द्रियाणि पराण्याहुरिन्द्रियेभ्यः परं मनः।",
+        meaning: "Indriyaan badi hain — par mann unse bada hai. Mann se badi buddhi — aur buddhi se bada Atma.",
+        aaj: "Aaj indriyaan jo maangin — ek baar mann se poochho pehle."
+      },
+      {
+        chapter: "6.16",
+        shlok: "नात्यश्नतस्तु योगोऽस्ति न चैकान्तमनश्नतः।",
+        meaning: "Na zyaada khaane waale ka yog hota hai, na bilkul bhookhe rehne waale ka. Santulan chahiye.",
+        aaj: "Aaj khane mein ek baar dhyan rakho — na zyaada, na kam."
+      }
+    ];
+
+    function getTodayQuote() {
+      const today = new Date();
+      const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+      return quotes[dayOfYear % quotes.length];
+    }
+
+    const days = ["Ravivar","Somvar","Mangalvar","Budhvar","Guruvar","Shukravar","Shanivar"];
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const now = new Date();
+    document.getElementById("dateStr").textContent =
+      `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    const q = getTodayQuote();
+    document.getElementById("chapterBadge").textContent = `ADHYAY ${q.chapter}`;
+    document.getElementById("shlok").textContent = q.shlok;
+    document.getElementById("meaning").textContent = q.meaning;
+    document.getElementById("aaj").textContent = q.aaj;
+
+    // PWA install prompt
+    let deferredPrompt;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById("installBtn").classList.add("visible");
+    });
+
+    document.getElementById("installBtn").addEventListener("click", async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        document.getElementById("installBtn").classList.remove("visible");
+      }
+    });
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
+</body>
+</html>
