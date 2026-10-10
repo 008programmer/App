@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validSaved } from '../src/state.ts';
+import { validSaved } from '../app/src/state.ts';
 const valid = () => ({schemaVersion:1,selectedColour:'pink',activity:'garden',garden:{flower1:'pink',flower2:'yellow',flower3:'blue',butterfly:'purple'},strokes:[]});
 test('validates saved artwork without truncating drawings over twenty strokes',()=>{
  const state=valid(); state.strokes=Array.from({length:45},()=>({colour:'green',points:[[0,0],[.5,.7],[1,1]]}));
@@ -17,3 +17,4 @@ test('preserves normalized strokes and valid pointer excursions outside the canv
  const state={...valid(),strokes:[{colour:'blue',points:[[-.02,0],[1.05,.7]]}]};
  const copy=structuredClone(state); assert.equal(validSaved(state),true); assert.deepEqual(state,copy);
 });
+

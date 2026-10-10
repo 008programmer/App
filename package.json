@@ -7,6 +7,7 @@
     "test": "node --test tests/*.test.mjs",
     "dev": "vite",
     "build": "tsc && vite build",
+    "publish:files": "npm run build && node scripts/publish-files.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
@@ -25,3 +26,4 @@
     "vite-plugin-pwa": "^2.0.0"
   }
 }
+

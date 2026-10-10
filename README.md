@@ -19,9 +19,7 @@ Open the printed URL followed by `/App/` when necessary.
 ## Publish
 
 This repository targets https://008programmer.github.io/App/.
-In repository Settings > Pages, select **GitHub Actions** as the build source.
-The Pages workflow tests, builds, and deploys `dist` on pushes to `main`.
-The original Shlok files remain in Git history and unused legacy files are not included in the deployment.
+Pages publishes the committed production files from the main branch root. Keep Settings > Pages set to Deploy from a branch, main, / (root). Editable source lives in app/. After edits, run npm run publish:files and commit the generated root files together with the source. The workflow checks the build without competing with branch deployment.
 
 ## Install and offline use
 
@@ -36,3 +34,4 @@ Updates show “A new garden is ready.” Select Update to save artwork and acti
 Production build and four saved-state tests pass. Automated headless Edge checks at `/App/` verified service worker control, manifest scope and icons, offline reload, saved colour and drawing restoration, and offline interaction without JavaScript errors. A two-build update rehearsal verified the update prompt, activation, saved artwork preservation, and offline reload of the updated build.
 
 Native installation on physical Android/iOS devices and the deployed site still need verification. The application has a non-fatal bundle-size warning from Three.js.
+
